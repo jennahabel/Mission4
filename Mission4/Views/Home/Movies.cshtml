@@ -4,6 +4,8 @@
 }
 @model Mission4.Models.AppResponse
 
+<!--Movie page to enter new movies into the database-->
+
 <div class="text-center">
     <h1 class="display-4">My Movie Database</h1>
     <p>Enter a worthy movie to add to the collection</p>
@@ -11,8 +13,15 @@
     <form method="post">
         <div asp-validation-summary="All"></div>
 
-        <label asp-for="Category">Category: </label>
-        <input asp-for="Category" /><br />
+        <label asp-for="CategoryId">Category: </label>
+        <select asp-for="CategoryId">
+            <option value="">Select a Category</option>
+            @foreach (Categories c in ViewBag.allCategories)
+            {
+                <option value="@c.CategoryId">@c.CategoryName</option>
+            }
+        </select>
+        <br />
 
         <label asp-for="Title">Title: </label>
         <input asp-for="Title" /><br />
@@ -25,6 +34,7 @@
 
         <label asp-for="Rating">Rating: </label>
         <select asp-for="Rating">
+            <option value="">Select a Rating</option>
             <option value="G">G</option>
             <option value="PG">PG</option>
             <option value="PG13">PG-13</option>

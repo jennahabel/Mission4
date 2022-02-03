@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission4.Models;
 
@@ -11,12 +12,13 @@ namespace Mission4.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+   
         private MovieAppsContext MyContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, MovieAppsContext mycontext)
+
+        //Constructor
+        public HomeController( MovieAppsContext mycontext)
         {
-            _logger = logger;
             MyContext = mycontext;
         }
 
@@ -30,18 +32,24 @@ namespace Mission4.Controllers
             return View();
         }
 
+        //returns the movie view
         [HttpGet]
         public IActionResult Movies()
         {
+            ViewBag.allCategories = MyContext.categories.ToList();
+
             return View();
         }
 
+        //returns the confirmation view when the form is submitted with a post method
         [HttpPost]
         public IActionResult Movies(AppResponse ar)
         {
             if(!ModelState.IsValid)
             {
-                return View();
+                ViewBag.allCategories = MyContext.categories.ToList();
+
+                return View(ar);
             }
 
             MyContext.Add(ar);
@@ -50,10 +58,52 @@ namespace Mission4.Controllers
             return View("Confirmation", ar);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult ShowMovies()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+            var applications = MyContext.movies
+                .Include(x => x.Category)
+                .OrderBy(x => x.Title)
+                .ToList();
+
+            return View(applications);
         }
+
+        [HttpGet]
+        public IActionResult Edit(int movieid)
+        {
+            ViewBag.allCategories = MyContext.categories.ToList();
+
+            var app = MyContext.movies.Single(x => x.MovieId == movieid);
+
+            return View("Movies", app);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(AppResponse update)
+        {
+            MyContext.Update(update);
+            MyContext.SaveChanges();
+
+            return RedirectToAction("ShowMovies");
+        }
+
+
+        [HttpGet]
+        public IActionResult Delete(int movieid)
+        {
+            var app = MyContext.movies.Single(x => x.MovieId == movieid);
+
+            return View(app);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(AppResponse delete)
+        {
+            MyContext.movies.Remove(delete);
+            MyContext.SaveChanges();
+            return RedirectToAction("ShowMovies");
+        }
+
     }
 }
