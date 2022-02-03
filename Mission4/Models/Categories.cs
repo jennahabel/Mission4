@@ -1,4 +1,6 @@
-﻿using System;
+﻿//This is the Category Table
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,3 +16,4 @@ namespace Mission4.Models
         public string CategoryName { get; set; }
     }
 }
+

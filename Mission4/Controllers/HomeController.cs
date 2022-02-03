@@ -58,6 +58,7 @@ namespace Mission4.Controllers
             return View("Confirmation", ar);
         }
 
+        //gets all the info from the database and pops it in the ShowMovies View
         public IActionResult ShowMovies()
         {
 
@@ -69,6 +70,7 @@ namespace Mission4.Controllers
             return View(applications);
         }
 
+        //This is the EDIT Get and Post controllers
         [HttpGet]
         public IActionResult Edit(int movieid)
         {
@@ -89,6 +91,7 @@ namespace Mission4.Controllers
         }
 
 
+        //This is the DELETE Get and Post controllers
         [HttpGet]
         public IActionResult Delete(int movieid)
         {

@@ -14,8 +14,8 @@ namespace Mission4.Models
         public DbSet<AppResponse> movies { get; set; }
         public DbSet<Categories> categories { get; set; }
 
-        // Seed the database with 3 movies
-
+      
+        //This adds the values for the Category Id and Category Name
         protected override void OnModelCreating(ModelBuilder mb)
         {
             mb.Entity<Categories>().HasData(
@@ -30,6 +30,7 @@ namespace Mission4.Models
 
                 );
 
+            // Seed the database with 3 movies
             mb.Entity<AppResponse>().HasData(
 
                 new AppResponse
